@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Weather Dashboard</title>
+<link rel="icon" href="assets/vj-weather-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@1,600;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body data-theme="day">
+<div class="sky" aria-hidden="true"><div id="back"></div><div id="sun" class="orb"></div><div class="flash"></div></div>
+<div id="fx" aria-hidden="true"></div>
+<main class="app">
+  <div class="topbar">
+    <header class="brand"><img class="brand-logo" src="assets/vj-weather-logo.png" alt="VJ Weather logo"><span>Weather_Dashboard</span>.</header>
+    <div class="clock glass" role="timer" aria-label="Local time of the place shown">
+      <p id="clockZone" class="small"></p>
+      <p id="clockTime" class="clock-time"></p>
+      <p id="clockDate" class="small"></p>
+    </div>
+  </div>
+  <p id="msg" role="status"></p>
+  <ul id="list" class="glass" hidden></ul>
+  <div class="layout">
+    <section class="stage glass" id="stage" aria-label="Photos of the place">
+      <div class="photos" id="photos"></div>
+      <div id="land" class="land"></div>
+      <div class="cap"><h1 id="place">Loading</h1><p id="credit" class="small"></p></div>
+    </section>
+    <form id="search" class="bar glass" novalidate>
+      <label class="sr" for="q">City, state or place</label>
+      <input id="q" placeholder="Search a city, state or place" autocomplete="off">
+      <button>Search</button>
+      <button type="button" id="geo">Locate</button>
+    </form>
+    <div class="side">
+      <section class="dial" aria-label="Current weather">
+        <div id="now"></div>
+        <div class="menu">
+          <button type="button" id="unit" aria-label="Switch temperature unit">&deg;C</button>
+          <select id="country" aria-label="Country"><option value="">Loading countries</option></select>
+          <select id="state" aria-label="State or region"><option value="">Choose a country first</option></select>
+        </div>
+      </section>
+      <div class="pair">
+        <section class="glass box" aria-label="Details"><h2>Details</h2><dl id="details"></dl></section>
+        <section class="glass box feed" aria-label="Weather messages"><h2>Today</h2><p id="times" class="small"></p><ul id="msgs"></ul></section>
+      </div>
+    </div>
+    <section class="glass box week" aria-label="7 day forecast"><h2>Next 7 days</h2><ul id="week"></ul></section>
+  </div>
+  <footer>Weather by <a href="https://open-meteo.com/">Open-Meteo.com</a>. Photos from <a href="https://commons.wikimedia.org/">Wikimedia Commons</a>. Places from <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>.</footer>
+</main>
+<script src="script.js"></script>
+</body>
+</html>

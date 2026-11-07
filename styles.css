@@ -1,0 +1,167 @@
+/* Theme variables: the sky, sun, clouds and text colour follow the weather and the local time */
+:root{--dial-tint:rgba(255,255,255,.14)} /* change this value to colour the circle */
+body[data-theme=day]{--sky:linear-gradient(180deg,#2F8FE6,#8CC9F2 55%,#D6EEFB);--land:#3C5A40;--glass:rgba(255,255,255,.22);--ink:#08233F;--onink:#F4F9FF;--line:rgba(8,35,63,.25);--accent:#FFD166;--cloud:rgba(255,255,255,.8);--opt-bg:#F4F6E8;--opt-ink:#1F2A12;color-scheme:light}
+body[data-theme=cloudy]{--sky:linear-gradient(180deg,#8896A3,#B5C0C8 55%,#D3DADF);--land:#4A5560;--glass:rgba(255,255,255,.28);--ink:#10202E;--onink:#F4F7FA;--line:rgba(16,32,46,.25);--accent:#E3E9EE;--cloud:rgba(255,255,255,.6);--opt-bg:#F4F6E8;--opt-ink:#1F2A12;color-scheme:light}
+body[data-theme=mist]{--sky:linear-gradient(180deg,#C4CCD1,#E4E8EA 55%,#F1F3F3);--land:#8D9791;--glass:rgba(255,255,255,.4);--ink:#1B2733;--onink:#F4F7FA;--line:rgba(27,39,51,.25);--accent:#B9C4CC;--cloud:rgba(255,255,255,.7);--opt-bg:#F4F6E8;--opt-ink:#1F2A12;color-scheme:light}
+body[data-theme=evening]{--sky:linear-gradient(180deg,#2B2F6B 0%,#B5527B 42%,#E8803F 100%);--land:#1B1230;--glass:rgba(12,8,32,.45);--ink:#FFF4E8;--onink:#1B1230;--line:rgba(255,244,232,.28);--accent:#FFB38A;--cloud:rgba(255,190,150,.35);--opt-bg:#1B1230;--opt-ink:#FFF4E8;color-scheme:dark}
+body[data-theme=night]{--sky:linear-gradient(180deg,#040812,#0A1330 60%,#16264F);--land:#02050F;--glass:rgba(255,255,255,.08);--ink:#EAF0FF;--onink:#050B1F;--line:rgba(234,240,255,.22);--accent:#9DB4FF;--cloud:rgba(120,140,200,.1);--opt-bg:#101C3F;--opt-ink:#EAF0FF;color-scheme:dark}
+body[data-theme=rain]{--sky:linear-gradient(180deg,#2B3541,#4A5868 60%,#6E7C8B);--land:#1F2933;--glass:rgba(8,14,22,.32);--ink:#F1F5F9;--onink:#0E1F21;--line:rgba(241,245,249,.22);--accent:#7FB7E6;--cloud:rgba(18,26,36,.65);--opt-bg:#1B2230;--opt-ink:#F1F5F9;color-scheme:dark}
+body[data-theme=evening],body[data-theme=night],body[data-theme=rain]{text-shadow:0 1px 6px rgba(0,0,0,.35)}
+body.storm .sky{filter:brightness(.75)}
+
+*{box-sizing:border-box}
+body{margin:0;font:400 1rem/1.5 Outfit,system-ui,sans-serif;color:var(--ink);min-height:100vh}
+button,select,input{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+a{color:inherit}
+
+/* sky layers */
+.sky{position:fixed;inset:0;z-index:-1;background:var(--sky);overflow:hidden;animation:fade .9s}
+.sky::before{content:"";position:absolute;inset:0;background:#05060F;opacity:var(--dim,0);transition:opacity 1s;pointer-events:none;z-index:1}
+body[data-theme=night] .sky::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 20% 30%,rgba(90,60,160,.25),transparent 55%),radial-gradient(ellipse at 80% 70%,rgba(30,90,160,.2),transparent 50%)}
+#back,#fx{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+#fx{position:fixed;z-index:3}
+#back i,#fx i{position:absolute;display:block}
+.orb{position:absolute;width:170px;height:170px;border-radius:50%;transform:translate(-50%,-50%);transition:left 1s,top 1s,opacity 1s;
+  background:radial-gradient(circle,#FFF6C8 0 34%,#FFD166 58%,rgba(255,209,102,0) 70%);box-shadow:0 0 90px 30px rgba(255,200,90,.45);animation:bob 14s ease-in-out infinite}
+.orb::before{content:"";position:absolute;inset:-60%;border-radius:50%;background:repeating-conic-gradient(rgba(255,225,140,.3) 0 5deg,transparent 5deg 15deg);
+  -webkit-mask-image:radial-gradient(circle,#000 25%,transparent 68%);mask-image:radial-gradient(circle,#000 25%,transparent 68%);animation:spin 80s linear infinite}
+.orb.moon{width:100px;height:100px;background:radial-gradient(circle at 34% 34%,#fff,#E6EAF4 55%,#B7C0D6);box-shadow:0 0 70px 18px rgba(200,215,255,.35)}
+.orb.moon::before{display:none}
+.orb.moon::after{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 62% 38%,rgba(120,130,160,.35) 0 9%,transparent 10%),radial-gradient(circle at 40% 66%,rgba(120,130,160,.3) 0 12%,transparent 13%),radial-gradient(circle at 70% 70%,rgba(120,130,160,.25) 0 6%,transparent 7%)}
+.cloud{left:-30vw;border-radius:50%;background:var(--cloud);filter:blur(22px);animation:drift linear infinite}
+.star{width:2px;height:2px;border-radius:50%;background:#EAF0FF;animation:twinkle 3s ease-in-out infinite}
+.meteor{width:2px;height:90px;background:linear-gradient(#fff,transparent);rotate:35deg;opacity:0;animation:meteor 11s linear infinite}
+.drop{top:-20px;width:1.5px;height:16px;background:rgba(220,235,250,.65);animation:fall linear infinite}
+.flake{top:-10px;width:6px;height:6px;border-radius:50%;background:#fff;animation:fall linear infinite}
+.flash{position:absolute;inset:0;background:#EFF9F8;opacity:0;pointer-events:none;z-index:2}
+body.storm .flash{animation:bolt 7s infinite}
+
+/* layout */
+.app{max-width:1400px;margin:0 auto;padding:0 20px 40px;display:grid;gap:16px}
+.brand{padding-top:26px;font:italic 700 1.3rem 'Playfair Display',Georgia,serif;letter-spacing:.01em}
+.brand span{font-weight:600}
+.layout{display:grid;gap:16px;grid-template-columns:1.2fr 1fr;grid-template-rows:1fr auto auto;min-height:calc(100vh - 150px);
+  grid-template-areas:"stage side" "bar side" "week week"}
+.stage{grid-area:stage;position:relative;min-height:460px;overflow:hidden}
+.bar{grid-area:bar}
+.side{grid-area:side;display:grid;grid-template-rows:auto 1fr;gap:16px}
+.week{grid-area:week}
+.pair{display:grid;grid-template-columns:1fr 1.25fr;gap:16px;min-height:0}
+
+/* glass panels */
+.glass{background:var(--glass);border:1px solid var(--line);border-radius:24px;backdrop-filter:blur(8px) saturate(130%);-webkit-backdrop-filter:blur(8px) saturate(130%);animation:rise .7s both}
+.box{padding:20px;min-height:0}
+.pair .box:last-child{animation-delay:.1s}
+h1,.temp{font-family:'Playfair Display',Georgia,serif;font-style:italic;font-weight:700;letter-spacing:-.01em;margin:0;font-feature-settings:"lnum" 1}
+h2{margin:0 0 12px;font-size:.78rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase}
+.small{margin:0;font-size:.85rem;opacity:.85}
+
+/* stage with photos */
+.photos img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.2s}
+.photos img.on{opacity:1}
+.land{position:absolute;inset:auto 0 0 0;width:100%;height:45%;color:var(--land);pointer-events:none}
+.land svg{width:100%;height:100%;opacity:0;transform:translateY(40px)}
+.land.in svg{opacity:.9;transform:none;transition:opacity .7s,transform .7s cubic-bezier(.16,1,.3,1)}
+.land path{fill:currentColor}
+.stage.has-photo .land{display:none}
+.cap{position:absolute;left:0;right:0;bottom:0;padding:56px 22px 18px;color:#F6FAF4;text-shadow:none;background:linear-gradient(transparent,rgba(6,16,20,.82))}
+.cap h1{font-size:clamp(1.4rem,3vw,2.2rem);line-height:1.15}
+
+/* search pill */
+.bar{display:flex;gap:6px;padding:6px;border-radius:999px}
+.bar input{flex:1;min-width:0;background:none;border:0;padding:0 16px}
+.bar input::placeholder{color:var(--ink);opacity:.7}
+.bar button{background:var(--ink);color:var(--onink);border:0;border-radius:999px;padding:.6rem 1.1rem;min-height:44px;font-weight:500;text-shadow:none}
+
+/* circle */
+.dial{border-radius:50%;aspect-ratio:1;width:min(100%,380px);margin:0 auto;display:grid;place-content:center;text-align:center;padding:10%;
+  border:2px solid var(--accent);background:var(--dial-tint);backdrop-filter:blur(8px) saturate(130%);-webkit-backdrop-filter:blur(8px) saturate(130%);animation:rise .7s both}
+.temp{font-size:clamp(3.4rem,8vw,5rem);line-height:1}
+.temp .deg{font:300 .8em Outfit,sans-serif}
+.temp small{font:400 1.2rem Outfit,sans-serif;margin-left:4px}
+.cond{margin:6px 0;font-size:1.2rem;font-weight:500}
+.menu{display:grid;grid-template-columns:auto 1fr;gap:6px;margin-top:10px}
+#state{grid-column:1/-1}
+.menu button,.menu select{min-height:40px;border-radius:999px;border:1px solid var(--ink);background-color:transparent;font-size:.85rem;padding:0 14px}
+.menu select{width:100%;appearance:none;-webkit-appearance:none;padding-right:30px;
+  background-image:linear-gradient(45deg,transparent 50%,currentColor 50%),linear-gradient(135deg,currentColor 50%,transparent 50%);
+  background-position:calc(100% - 17px) 50%,calc(100% - 12px) 50%;background-size:5px 5px;background-repeat:no-repeat}
+.menu button:hover{background:var(--ink);color:var(--onink);text-shadow:none}
+.menu option{color:var(--opt-ink);background:var(--opt-bg)}
+
+/* details, messages, week */
+#details{display:grid;grid-template-columns:1fr 1fr;gap:14px 10px;margin:0}
+#details div{display:grid}
+#details dt{font-size:.75rem;opacity:.8;letter-spacing:.04em}
+#details dd{margin:0;font-size:1.15rem;font-weight:500}
+.feed{position:relative;border-radius:28px 28px 28px 6px;max-height:380px;overflow:auto;scrollbar-width:thin;scrollbar-color:var(--ink) transparent}
+#msgs{list-style:none;margin:10px 0 0;padding:0}
+#msgs li{padding:8px 0;border-bottom:1px solid var(--line);font-size:.9rem}
+#msgs b{display:inline-block;min-width:3.4rem;font-weight:600}
+#week{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(7,1fr);gap:12px}
+#week li{display:grid;gap:2px;text-align:center;padding:12px 6px;border:1px solid var(--line);border-radius:18px;font-size:.85rem}
+#week b{font-weight:600}
+#week strong{font-size:1.1rem;font-weight:500}
+#week em{font-style:normal;opacity:.7}
+
+/* messages and list */
+#msg:not(:empty){background:#EFF9F8;color:#8A1F1F;padding:.6rem 1rem;border-radius:12px;margin:0;text-shadow:none}
+#msg:empty{display:none}
+#list{list-style:none;margin:0;padding:8px}
+#list button{width:100%;text-align:left;background:none;border:0;padding:.6rem 1rem;border-radius:12px}
+#list button:hover{background:var(--ink);color:var(--onink);text-shadow:none}
+body.loading .layout{opacity:.6;transition:opacity .3s}
+footer{font-size:.8rem;opacity:.85}
+
+@keyframes rise{from{opacity:0;transform:translateY(24px)}}
+@keyframes fade{from{opacity:.4}}
+@keyframes fall{to{transform:translateY(110vh)}}
+@keyframes twinkle{50%{opacity:.2}}
+@keyframes bob{50%{translate:14px -10px}}
+@keyframes spin{to{rotate:360deg}}
+@keyframes drift{to{translate:170vw 0}}
+@keyframes meteor{0%,88%{opacity:0;translate:0 0}90%{opacity:1}100%{opacity:0;translate:-260px 180px}}
+@keyframes bolt{0%,92%,96%,100%{opacity:0}93%{opacity:.7}94%{opacity:.1}95%{opacity:.6}}
+
+@media(max-width:1000px){
+  .layout{grid-template-columns:1fr;grid-template-rows:auto;min-height:0;grid-template-areas:"stage" "bar" "side" "week"}
+  .stage{min-height:300px}
+  .dial{border-radius:40px;aspect-ratio:auto;width:100%;padding:24px}
+  #week{display:flex;overflow-x:auto}
+  #week li{min-width:104px}
+}
+@media(max-width:620px){.pair{grid-template-columns:1fr}.feed{max-height:none}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.land svg{opacity:.9;transform:none}}
+.app{grid-template-columns:minmax(0,1fr)}
+.layout>*,.side,.pair>*{min-width:0}
+@media(max-width:1000px){.layout{grid-template-columns:minmax(0,1fr)}}
+
+/* VJ brand logo */
+.brand{display:flex;align-items:center;gap:14px}
+.brand-logo{width:58px;height:58px;object-fit:contain;flex:0 0 auto}
+@media(max-width:620px){.brand-logo{width:46px;height:46px}.brand{font-size:1.1rem}}
+
+/* Panels are almost clear: only a thin frame shows, the sky colour comes through */
+body[data-theme=day]{--glass:rgba(255,255,255,.05);text-shadow:0 0 10px rgba(255,255,255,.55)}
+body[data-theme=cloudy]{--glass:rgba(255,255,255,.06);text-shadow:0 0 10px rgba(255,255,255,.5)}
+body[data-theme=mist]{--glass:rgba(255,255,255,.08);text-shadow:0 0 8px rgba(255,255,255,.5)}
+body[data-theme=night]{--glass:rgba(255,255,255,.05);text-shadow:0 1px 8px rgba(0,0,0,.6)}
+body[data-theme=rain]{--glass:rgba(8,14,22,.12);text-shadow:0 1px 8px rgba(0,0,0,.6)}
+body[data-theme=evening]{--glass:rgba(12,8,32,.30);text-shadow:0 1px 8px rgba(0,0,0,.6)}
+.glass{border-width:1px;backdrop-filter:blur(3px) saturate(120%);-webkit-backdrop-filter:blur(3px) saturate(120%)}
+.dial{background:transparent;border:1.5px solid var(--accent);backdrop-filter:none;-webkit-backdrop-filter:none}
+.stage{text-shadow:none}
+#list button b{font-weight:600}
+.bar input:focus-visible{outline:none}
+.bar:focus-within{outline:2px solid var(--ink);outline-offset:2px}
+
+/* live clock of the place that is shown */
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding-top:18px}
+.topbar .brand{padding-top:0}
+.clock{padding:8px 20px;border-radius:18px;text-align:right}
+.clock-time{margin:0;font:600 1.7rem/1.15 Outfit,sans-serif;font-variant-numeric:tabular-nums;letter-spacing:.02em}
+.clock .small{font-size:.75rem;letter-spacing:.06em}
+@media(max-width:620px){.clock{width:100%;text-align:left}}
